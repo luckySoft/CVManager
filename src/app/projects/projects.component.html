@@ -1,0 +1,60 @@
+<div>
+  <div class="row">
+    <div class="col-md-12">
+      <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo scrolling-navbar">
+        <!-- Navbar brand -->
+        <logo>
+          <a class="navbar-brand" href="/">CV Manager</a>
+        </logo>
+        <!-- Collapsible content -->
+        <links>
+          <!-- Links -->
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/users" mdbWavesEffect>Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/myprofile" mdbWavesEffect>Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Logout</a>
+            </li>
+          </ul>
+          <!-- Links -->
+        </links>
+        <!-- Collapsible content -->
+      </mdb-navbar>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <nav class="navbar navbar-inverse navbar-fixed-left">
+        <div class="container ">
+          <div class="menuItem" *ngFor="let menu of menuItems">
+            <a class="link" routerLink="/users/{{id}}/{{menu.state}}">
+              <i class="fa fa-{{menu.icon}}"></i> {{menu.title}}
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="col-md-10">
+      <!-- Main content -->
+      <section class="content">
+        <div *ngFor='let exp of experience'>
+          <div *ngIf='exp.projectIds?.length > 0'>
+            <br/>
+            <h4 class="box-header">Projects at
+              <strong>{{exp.company}}</strong>
+            </h4>
+            <owl-carousel [options]="{items: 3, video: true, dots: true, navigation: true}" [carouselClasses]="['owl-theme', 'row', 'sliding']">
+              <div class="item-video" *ngFor="let videoId of exp.projectIds">
+                <app-track [start]="false" [video]="videoId" [width]='300' [height]='200'></app-track>
+              </div>
+            </owl-carousel>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

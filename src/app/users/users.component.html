@@ -1,0 +1,99 @@
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo scrolling-navbar">
+                <!-- Navbar brand -->
+                <logo>
+                    <a class="navbar-brand" href="/">CV Manager</a>
+                </logo>
+                <!-- Collapsible content -->
+                <links>
+                    <!-- Links -->
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link waves-light" routerLink="/users" mdbWavesEffect>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link waves-light" routerLink="/myprofile" mdbWavesEffect>Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Logout</a>
+                        </li>
+                    </ul>
+                    <!-- Links -->
+                </links>
+
+                <!-- Collapsible content -->
+            </mdb-navbar>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <br>
+                <form class="form-inline waves-light" mdbWavesEffect style="float: right; text-align: right;">
+                    <div class="md-form mt-0">
+                        <input #searchBox (keyup)="search(searchBox.value)" id="search-box" class="form-control mr-sm-2" type="text" placeholder="Search">
+                    </div>
+                </form>
+                <h3 class="text-left text-primary">
+                    <i> Meet our users!</i>
+                </h3>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-md-4" *ngFor="let user of users$ | async">
+                        <!--Card-->
+                        <div class="card card-cascade">
+
+                            <!--Card image-->
+                            <div class="view overlay hm-white-slight waves-light" mdbWavesEffect>
+                                <img class="card-img-top" alt="Unavailable" *ngIf='!user.mainProfiles?.length > 0' src="../../assets/profile.jpg">
+                                <img class="card-img-top" alt="Unavailable" *ngIf='user.mainProfiles?.length > 0' [src]="getMainProfile(user)">
+                                <a>
+                                    <div class="mask"></div>
+                                </a>
+                            </div>
+                            <!--/.Card image-->
+
+                            <!--Card content-->
+                            <div class="card-body text-center">
+                                <!--Title-->
+                                <h4 class="card-title">
+                                    <strong>{{user.name}} {{user.lastName}}</strong>
+                                </h4>
+                                <h5>I am {{user.jobTitle}}</h5>
+
+                                <p class="card-text">{{user.description}}
+                                </p>
+
+                                <div *ngIf="!user.facebook && !user.twitter && !user.linkedIn">
+                                    <i class="sn fa fa-address-card"></i>
+                                </div>
+                                <!--Facebook-->
+                                <a type="link" *ngIf="user.facebook" mdbWavesEffect href="{{user.facebook}}">
+                                    <i class="sn fa fa-facebook"></i>
+                                </a>
+                                <!--Twitter-->
+                                <a type="link" *ngIf="user.twitter" mdbWavesEffect href="{{user.twitter}}">
+                                    <i class="sn fa fa-twitter"></i>
+                                </a>
+                                <!--LinkedIn +-->
+                                <a type="link" *ngIf="user.linkedIn" mdbWavesEffect href="{{user.linkedIn}}">
+                                    <i class="sn fa fa-linkedin"></i>
+                                </a>
+                            </div>
+                            <div class="card-footer text-center">
+                                <p>
+                                    <a class="btn btn-primary" routerLink="/users/{{user.id}}">Go to CV</a>
+                                </p>
+                            </div>
+                            <!--/.Card content-->
+                        </div>
+                        <!--/.Card-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

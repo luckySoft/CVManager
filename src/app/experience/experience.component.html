@@ -1,0 +1,88 @@
+<div>
+  <div class="row">
+    <div class="col-md-12">
+      <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo scrolling-navbar">
+        <!-- Navbar brand -->
+        <logo>
+          <a class="navbar-brand" href="/">CV Manager</a>
+        </logo>
+        <!-- Collapsible content -->
+        <links>
+          <!-- Links -->
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/users" mdbWavesEffect>Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/myprofile" mdbWavesEffect>Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Logout</a>
+            </li>
+          </ul>
+          <!-- Links -->
+        </links>
+        <!-- Collapsible content -->
+      </mdb-navbar>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <nav class="navbar navbar-inverse navbar-fixed-left">
+        <div class="container ">
+          <div class="menuItem" *ngFor="let menu of menuItems">
+            <a class="link" routerLink="/users/{{id}}/{{menu.state}}">
+              <i class="fa fa-{{menu.icon}}"></i> {{menu.title}}
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="col-md-10">
+      <!-- Main content -->
+      <section class="content">
+        <!-- row -->
+        <!-- The time line -->
+        <div class="timeline" *ngFor='let exp of experience'>
+          <div class="time-label">
+            <span class="bg-red-gradient" *ngIf='exp.period.to'>{{exp.period.from | date: 'yyyy'}}-{{exp.period.to | date: 'yyyy'}}</span>
+            <span class="bg-red-gradient" *ngIf='!exp.period.to'>{{exp.period.from | date: 'yyyy'}}-now</span>
+          </div>
+          <div>
+            <i class="fa fa-suitcase bg-blue-gradient text-white"></i>
+            <div class="timeline-item">
+              <span class="time text-bold"> {{exp.type}}</span>
+              <h3 class="timeline-header">
+                <span class="time text-bold">{{exp.job}}</span>
+              </h3>
+              <div class="timeline-body">
+                <div class="callout callout-info col-md-10 col-sm-8 col-xs-12">
+                  <h3 class="timeline-header">
+                    <a href="{{exp.url}}" target="_blank">{{exp.company}}</a>
+                  </h3>
+                  <p class="text-bold">{{exp.address}}</p>
+                  <ul>
+                    <li *ngFor='let resp of exp.responsibilities'>{{resp}}</li>
+                  </ul>
+                </div>
+                <span class="badge badge-primary" *ngFor='let tech of exp.technologies'>{{tech}}</span>
+              </div>
+              <div class="timeline-footer">
+                <p>
+                  <span class="pull-right">
+                    <a class="btn btn-primary btn-xs" routerLink='/users/{{id}}/projects'>View projects</a>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <i class="fa fa-clock-o bg-gray"></i>
+          </div>
+        </div>
+        <!-- /.col -->
+      </section>
+      <!-- /.content -->
+    </div>
+  </div>
+</div>

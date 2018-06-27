@@ -1,0 +1,525 @@
+<div>
+  <div class="row">
+    <div class="col-md-12">
+      <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo scrolling-navbar">
+        <!-- Navbar brand -->
+        <logo>
+          <a class="navbar-brand" href="/">CV Manager</a>
+        </logo>
+        <!-- Collapsible content -->
+        <links>
+          <!-- Links -->
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/users" mdbWavesEffect>Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/myprofile" mdbWavesEffect>Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Logout</a>
+            </li>
+          </ul>
+          <!-- Links -->
+        </links>
+        <!-- Collapsible content -->
+      </mdb-navbar>
+    </div>
+  </div>
+  <alert></alert>
+  <br>
+  <div class="container">
+    <h3 class="text-left text-primary">
+      <i> Edit Profile</i>
+    </h3>
+    <hr>
+    <div class="row">
+      <!-- left column -->
+      <div class="col-md-3">
+        <div class="text-center">
+          <img class="card-img-top" alt="Bootstrap Thumbnail First" *ngIf='!user.mainProfiles?.length > 0' src="../../assets/profile.jpg">
+          <img class="card-img-top" alt="Bootstrap  Thumbnail First" *ngIf='user.mainProfiles?.length > 0' [src]="getMainProfile()">
+          <h6>Upload a different photo...</h6>
+          <!-- TODO -->
+          <input type="file" name="photo" ng2FileSelect [uploader]="uploader" />
+
+          <button type="button" class="btn btn-success btn-s" (click)="addImage()" [disabled]="!uploader.getNotUploadedItems().length">
+            Upload an Image
+          </button>
+        </div>
+      </div>
+
+      <!-- edit form column -->
+      <div class="col-md-9 personal-info">
+        <div class="alert alert-info alert-dismissable">
+          <a class="panel-close close" data-dismiss="alert"></a>
+          <i class="fa fa-user"></i>
+          This is your current personal information. Please apply it carefully.
+        </div>
+        <h3 class="text-left text-primary">Personal information</h3>
+        <div class="row">
+          <div class="column" *ngFor="let avatar of avatars$ | async">
+            <button class="btn btn-info" (click)="removeImage(avatar)">x</button>
+            <img src="{{avatar.img}}" class="img img-thumbnail" alt="Unavailable!">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" [checked]="avatar.main" (change)="changeMainProfile(avatar)"> Select as main profile</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <br>
+            <form class="form-horizontal" role="form" [formGroup]="profileForm" (ngSubmit)="save()">
+              <div class="form-group">
+                <label class="col-lg-3 control-label">First name:</label>
+                <div class="col-lg-8">
+                  <input class="form-control" type="text" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+                  <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                    <div *ngIf="f.name.errors.required">Field is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-3 control-label">Last name:</label>
+                <div class="col-lg-8">
+                  <input class="form-control" type="text" formControlName="lastName" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }">
+                  <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                    <div *ngIf="f.lastName.errors.required">Field is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-3 control-label">Job title:</label>
+                <div class="col-lg-8">
+                  <input class="form-control" type="text" formControlName="jobTitle" [ngClass]="{ 'is-invalid': submitted && f.jobTitle.errors }">
+                  <div *ngIf="submitted && f.jobTitle.errors" class="invalid-feedback">
+                    <div *ngIf="f.jobTitle.errors.required">Field is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-3 control-label">Location:</label>
+                <div class="col-lg-8">
+                  <input class="form-control" type="text" formControlName="location" [ngClass]="{ 'is-invalid': submitted && f.location.errors }">
+                  <div *ngIf="submitted && f.location.errors" class="invalid-feedback">
+                    <div *ngIf="f.location.errors.required">Field is required</div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-10">
+                    <label class="col-lg-10 control-label">Languages:</label>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-primary" type="button" (click)="addLanguage()">
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div formArrayName="languages" class="col-lg-8">
+                  <div *ngFor="let lang of profileForm.get('languages').controls; let i = index" [formGroupName]="i">
+                    <p></p>
+                    <div class="row">
+                      <div class="col-md-5">
+                        <input class="form-control" type="text" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.languages.controls[i].controls.name.errors }">
+                        <div *ngIf="submitted && f.languages.controls[i].controls.name.errors" class="invalid-feedback">
+                          <div *ngIf="f.languages.controls[i].controls.name.errors.required">Field is required</div>
+                        </div>
+                      </div>
+                      <div class="col-md-5">
+                        <!-- Replace value -->
+                        <mat-form-field>
+                          <mat-select placeholder="Language Level" [(value)]="level" formControlName="level">
+                            <mat-option *ngFor="let lvl of languageLevels" [value]="lvl" [ngClass]="{ 'is-invalid': submitted && f.languages.controls[i].controls.level.errors }">
+                              {{lvl}}
+                            </mat-option>
+                          </mat-select>
+                          <div *ngIf="submitted && f.languages.controls[i].controls.level.errors" class="invalid-feedback">
+                            <div *ngIf="f.languages.controls[i].controls.level.errors">Field is required</div>
+                          </div>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="btn-group">
+                          <button class="btn btn-primary waves-light" type="button" (click)="removeLanguage(i)">
+                            -
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Password:</label>
+                <div class="col-md-8">
+                  <input class="form-control" type="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                  <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Field is required</div>
+                  </div>
+                  <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.minLength">Field is must be at least 8 characters</div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <h4 class="text-left text-primary">Social Information</h4>
+              <div class="form-group">
+                <label class="col-lg-3 control-label">My description:</label>
+                <div class="col-lg-8">
+                  <input class="form-control" type="text" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }">
+                  <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                    <div *ngIf="f.description.errors.required">Field is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-3 control-label">Social Networks:</label>
+                <div class="col-lg-8">
+                  <label class="control-label">Facebook:</label>
+                  <input class="form-control" type="text" formControlName="facebook" [ngClass]="{ 'is-invalid': submitted && f.facebook.errors }">
+                  <p></p>
+                  <label class="control-label">Twitter:</label>
+                  <input class="form-control" type="text" formControlName="twitter" [ngClass]="{ 'is-invalid': submitted && f.twitter.errors }">
+                  <p></p>
+                  <label class="control-label">LinkedIn:</label>
+                  <input class="form-control" type="text" formControlName="linkedIn" [ngClass]="{ 'is-invalid': submitted && f.linkedIn.errors }">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-3 control-label">My video:</label>
+                <div class="col-lg-8">
+                  <input class="form-control" type="text" formControlName="videoId" value="https://www.youtube.com/watch?v={{user.videoId}}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-3 control-label">Social skills:</label>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div formArrayName="socialSkills">
+                      <div *ngFor="let skill of profileForm.get('socialSkills').controls; let i = index" [formGroupName]="i">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <label class="progress-text"> {{skill.controls.title.value}}</label>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-slider class="example-margin" [invert]="invert" [max]="100" [min]="0" [step]="1" [thumbLabel]="true" [tickInterval]="tickInterval"
+                              formControlName="percentage" [vertical]="vertical" [ngClass]="{ 'is-invalid': submitted && f.socialSkills.controls[i].controls.percentage.errors }">
+                            </mat-slider>
+                          </div>
+                          <div class="col-md-4">
+                            <mat-form-field>
+                              <mat-select placeholder="Theme" formControlName="theme" aria-required="true">
+                                <mat-option *ngFor="let theme of themes" [value]="theme.themeName" [ngClass]="{ 'is-invalid': submitted && f.socialSkills.controls[i].controls.theme.errors }">
+                                  {{theme.themeViewValue}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-lg-4 control-label" style="font-size: 18px">My favourite technologies:</label>
+                <div class="col-md-12">
+                  <!-- bind -->
+                  <p></p>
+                  <div class="row">
+                    <div class="col-md-4" *ngFor="let tech of technologies">
+                      <label class="container-checkbox">{{tech.viewValue}}
+                        <input type="checkbox" [checked]="checkUserTechnologies(tech.techValue)" (change)="changeFavouriteTechnologies(tech.techValue)">
+                        <span class="checkmark"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-md-10">
+                  <h4 class="text-left text-primary">Technology skills </h4>
+                </div>
+                <div class="col-md-2">
+                  <button class="btn btn-primary" type="button" (click)="addSkill()">
+                    +
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div formArrayName="devSkills">
+                      <div *ngFor="let skill of profileForm.get('devSkills').controls; let i = index" [formGroupName]="i">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <mat-form-field>
+                              <mat-select placeholder="Software" formControlName="image" aria-required="true">
+                                <mat-option *ngFor="let tech of technologies" [value]="tech.techValue">
+                                  {{tech.viewValue}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-3">
+                            <mat-slider class="example-margin" [invert]="invert" [max]="100" [min]="0" [step]="1" [thumbLabel]="true" formControlName="percentage"
+                              [vertical]="vertical">
+                            </mat-slider>
+                          </div>
+                          <div class="col-md-3">
+                            <mat-form-field>
+                              <mat-select placeholder="Theme" formControlName="theme" aria-required="true">
+                                <mat-option *ngFor="let theme of themes" [value]="theme.themeName">
+                                  {{theme.themeViewValue}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-3">
+                            <button class="btn btn-primary waves-light" type="button" (click)="removeSkill(i)">
+                              -
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-md-10">
+                  <h4 class="text-left text-primary">Education </h4>
+                </div>
+                <div class="col-md-2">
+                  <button class="btn btn-primary" type="button" (click)="addEducation()">
+                    +
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <p></p>
+                  <div formArrayName="education">
+                    <div class="form-group" *ngFor="let edu of profileForm.controls.education.controls; let i = index;" [formGroupName]="i">
+                      <div class="row">
+                        <div class="col-md-10">
+                          <label class="col-lg-3 control-label">Period:</label>
+                          <div formGroupName="period">
+                            <div class="col-lg-8">
+                              <div class="form-group">
+                                <label class="col-lg-3 control-label">From:</label>
+                                <mat-form-field>
+                                  <input matInput [matDatepicker]="picker" placeholder="From" formControlName="from" [required]="true" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.period.controls.from.errors }">
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                                <p></p>
+                              </div>
+                              <div class="form-group">
+                                <label class="col-lg-3 control-label">To:</label>
+                                <mat-form-field>
+                                  <input matInput [matDatepicker]="picker1" placeholder="To" formControlName="to" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.period.controls.to.errors }">
+                                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                          <label class="col-lg-3 control-label">Specialty:</label>
+                          <div class="col-lg-8">
+                            <input class="form-control" type="text" formControlName="specialty" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.specialty.errors }">
+                          </div>
+                          <label class="col-lg-3 control-label">Institution:</label>
+                          <div class="col-lg-8">
+                            <input class="form-control" type="text" formControlName="institution" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.institution.errors }">
+                          </div>
+                          <label class="col-lg-3 control-label">Address:</label>
+                          <div class="col-lg-8">
+                            <input class="form-control" type="text" formControlName="address" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.address.errors }">
+                          </div>
+                          <label class="col-lg-3 control-label">Url:</label>
+                          <div class="col-lg-8">
+                            <input class="form-control" type="text" formControlName="url" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.url.errors }">
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <button class="btn btn-primary waves-light" type="button" (click)="removeEducation(edu)">
+                            -
+                          </button>
+                        </div>
+                      </div>
+                      <hr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-md-10">
+                  <h4 class="text-left text-primary">Experience </h4>
+                </div>
+                <div class="col-md-2">
+                  <button class="btn btn-primary" type="button" (click)="addExperience()">
+                    +
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <p></p>
+                  <div formArrayName="experience">
+                    <div class="form-group" *ngFor="let exp of profileForm.controls.experience.controls; let i = index;" [formGroupName]="i">
+                      <div class="row">
+                        <div class="col-md-10">
+                          <label class="col-lg-3 control-label">Period:</label>
+                          <div formGroupName="period">
+                            <div class="col-lg-8">
+                              <div class="form-group">
+                                <label class="col-lg-3 control-label">From:</label>
+                                <mat-form-field>
+                                  <input matInput [matDatepicker]="picker" placeholder="From" formControlName="from" [required]="true" [ngClass]="{ 'is-invalid': submitted && f.experience.controls[i].controls.period.controls.from.errors }">
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                                <p></p>
+                              </div>
+                              <div class="form-group">
+                                <label class="col-lg-3 control-label">To:</label>
+                                <mat-form-field>
+                                  <input matInput [matDatepicker]="picker1" placeholder="To" formControlName="to" [ngClass]="{ 'is-invalid': submitted && f.experience.controls[i].controls.period.controls.to.errors }">
+                                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                          <label class="col-lg-3 control-label">Job:</label>
+                          <div class="col-lg-8">
+                            <input class="form-control" type="text" formControlName="job" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.job.errors }">
+                          </div>
+                          <label class="col-lg-3 control-label">Company:</label>
+                          <div class="col-lg-8">
+                            <input class="form-control" type="text" formControlName="company" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.company.errors }">
+                          </div>
+                          <label class="col-lg-3 control-label">Address:</label>
+                          <div class="col-lg-8">
+                            <input class="form-control" type="text" formControlName="address" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.address.errors }">
+                          </div>
+                          <label class="col-lg-3 control-label">Url:</label>
+                          <div class="col-lg-8">
+                            <input class="form-control" type="text" formControlName="url" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.url.errors }">
+                          </div>
+                          <label class="col-lg-3 control-label">Type:</label>
+                          <div class="col-lg-8">
+                            <mat-form-field>
+                              <mat-select placeholder="Job Type" formControlName="type" aria-required="true" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.jobType.errors }">
+                                <mat-option *ngFor="let type of jobTypes" [value]="type">
+                                  {{type}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <hr>
+                          <div class="row">
+                            <div class="col-md-10">
+                              <label class="col-lg-3 control-label">Responsibilities:</label>
+                            </div>
+                            <div class="col-md-2">
+                              <button class="btn btn-primary" type="button" (click)="addResponsibility(i)">
+                                +
+                              </button>
+                            </div>
+                          </div>
+                          <div class="col-lg-8">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <div formArrayName="responsibilities">
+                                  <div *ngFor="let responsibility of profileForm.controls.experience.controls[i].controls.responsibilities.controls; let j = index;" [formGroupName]="j">
+                                    <div class="row">
+                                      <div class="col-md-10">
+                                        <input class="form-control" type="text" [value]="responsibility.value" [ngClass]="{ 'is-invalid': submitted && profileForm.controls.experience.controls[i].controls.responsibilities.controls.responsibility.value.errors }">
+                                      </div>
+                                      <div class="col-md-2">
+                                        <button class="btn btn-primary waves-light" type="button" (click)="removeResponsibility(j,i)">
+                                          -
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <p></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <hr>
+                          <label class="col-lg-3 control-label">Technologies:</label>
+                          <div class="col-lg-9">
+                            <div class="row">
+                              <div class="col-md-12">
+                                <mat-form-field class="chip-list" class="example-full-width">
+                                  <mat-chip-list #chipList1>
+                                    <mat-chip *ngFor="let expTech of exp.technologies; let i = index;" [selectable]="true" [removable]="true" (removed)="removeTechnology(exp.technologies[i], exp)">
+                                      {{expTech}}
+                                      <mat-icon matChipRemove *ngIf="true">x</mat-icon>
+                                    </mat-chip>
+                                    <input placeholder="New technology..." [matChipInputFor]="chipList1" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                      [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addTechnology($event, exp)" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+                                    />
+                                  </mat-chip-list>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <p></p>
+                          </div>
+                          <hr>
+                          <label class="col-lg-3 control-label">Projects:</label>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <mat-form-field class="chip-list" class="example-full-width">
+                                <mat-chip-list #chipList>
+                                  <mat-chip *ngFor="let id of exp.projectIds; let i = index;" [selectable]="true" [removable]="true" (removed)="removeVideo(exp.projectIds[i], exp)">
+                                    https://www.youtube.com/watch?v={{id}}
+                                    <mat-icon matChipRemove *ngIf="true">x</mat-icon>
+                                  </mat-chip>
+                                  <input matInput placeholder="New video on project..." formControlName="url" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                    [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addVideo($event, exp)" />
+                                  <!-- <mat-error *ngIf="urlFormControl.hasError('pattern')">
+                                    Please enter a valid youtube link
+                                  </mat-error> -->
+                                </mat-chip-list>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <p></p>
+                        </div>
+                        <div class="col-md-2">
+                          <button class="btn btn-primary waves-light" type="button" (click)="removeExperience(i)">
+                            -
+                          </button>
+                        </div>
+                      </div>
+                      <hr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label"></label>
+                <div class="col-md-8">
+                  <!-- Technologies, images, specialist in, languages, password, video, save -->
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  <span></span>
+                  <input type="reset" class="btn btn-default" value="Cancel" (click)="goBack()">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

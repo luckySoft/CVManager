@@ -1,0 +1,66 @@
+<div>
+  <div class="row">
+    <div class="col-md-12">
+      <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo scrolling-navbar">
+        <!-- Navbar brand -->
+        <logo>
+          <a class="navbar-brand" href="/">CV Manager</a>
+        </logo>
+        <!-- Collapsible content -->
+        <links>
+          <!-- Links -->
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/users" mdbWavesEffect>Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/myprofile" mdbWavesEffect>Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Logout</a>
+            </li>
+          </ul>
+          <!-- Links -->
+        </links>
+        <!-- Collapsible content -->
+      </mdb-navbar>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <nav class="navbar navbar-inverse navbar-fixed-left">
+        <div class="container ">
+          <div class="menuItem" *ngFor="let menu of menuItems">
+            <a class="link" routerLink="/users/{{id}}/{{menu.state}}">
+              <i class="fa fa-{{menu.icon}}"></i> {{menu.title}}
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="col-md-10">
+      <br/>
+      <h4 class="text-left text-primary">Technology Skills</h4>
+      <div class="row">
+        <div class="col-lg-3 col-xs-6" *ngFor="let skill of developmentStack">
+          <!-- small box -->
+          <!-- TODO box styles -->
+          <div class="small-box bg-{{skill.theme}}-gradient">
+            <div class="inner">
+              <h3>{{skill.percentage}}
+                <small class="text-black">%</small>
+              </h3>
+              <p class="text-bold">{{skill.software}}</p>
+            </div>
+            <div class="icon">
+              <i class="fa">
+                <img src="assets/icons/{{skill.image}}.png" class="img-responsive" width="70" />
+              </i>
+            </div>
+            <ngb-progressbar [showValue]="true" type="{{skill.theme}}" [value]="[skill.percentage]"></ngb-progressbar>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<div>
+  <div class="row">
+    <div class="col-md-12">
+      <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo scrolling-navbar">
+        <!-- Navbar brand -->
+        <logo>
+          <a class="navbar-brand" href="/">CV Manager</a>
+        </logo>
+        <!-- Collapsible content -->
+        <links>
+          <!-- Links -->
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/users" mdbWavesEffect>Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/myprofile" mdbWavesEffect>Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Logout</a>
+            </li>
+          </ul>
+          <!-- Links -->
+        </links>
+        <!-- Collapsible content -->
+      </mdb-navbar>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <nav class="navbar navbar-inverse navbar-fixed-left">
+        <div class="container ">
+          <div class="menuItem" *ngFor="let menu of menuItems">
+            <a class="link" routerLink="/users/{{id}}/{{menu.state}}">
+              <i class="fa fa-{{menu.icon}}"></i> {{menu.title}}
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="col-md-10">
+      <!-- Main content -->
+      <section class="content">
+        <!-- row -->
+        <!-- The time line -->
+        <div class="timeline" *ngFor='let edu of education'>
+          <div class="time-label">
+            <span class="bg-red-gradient" *ngIf='edu.period.to'>{{edu.period.from | date: 'yyyy'}}-{{edu.period.to | date: 'yyyy'}}</span>
+            <span class="bg-red-gradient" *ngIf='!edu.period.to'>{{edu.period.from | date: 'yyyy'}}-now</span>
+          </div>
+          <div>
+            <i class="fa fa-graduation-cap bg-blue-gradient text-white"></i>
+            <div class="timeline-item">
+              <h4 class="timeline-header">
+                <a href="{{edu.url}}"> {{edu.specialty}}</a>
+              </h4>
+              <div class="timeline-body">
+                <div class="callout callout-info col-md-10 col-sm-8 col-xs-12">
+                  <h3 class="text-black">{{edu.institution}}</h3>
+                  <h5>{{edu.address}}</h5>
+                </div>
+              </div>
+              <div class="timeline-footer">
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <i class="fa fa-clock-o bg-gray"></i>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

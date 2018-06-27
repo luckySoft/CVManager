@@ -1,0 +1,144 @@
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo scrolling-navbar">
+                <!-- Navbar brand -->
+                <logo>
+                    <a class="navbar-brand" href="/">CV Manager</a>
+                </logo>
+                <!-- Collapsible content -->
+                <links>
+                    <!-- Links -->
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link waves-light" routerLink="/users" mdbWavesEffect>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link waves-light" routerLink="/myprofile" mdbWavesEffect>Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link waves-light" routerLink="/login" mdbWavesEffect>Logout</a>
+                        </li>
+                    </ul>
+                    <!-- Links -->
+                </links>
+                <!-- Collapsible content -->
+            </mdb-navbar>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <nav class="navbar navbar-inverse navbar-fixed-left">
+                <div class="container ">
+                    <div class="menuItem" *ngFor="let menu of menuItems">
+                        <a class="link" routerLink="/users/{{id}}/{{menu.state}}">
+                            <i class="fa fa-{{menu.icon}}"></i> {{menu.title}}
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="col-md-10">
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <div class="pull-right">
+                                <button class="btn btn-box-tool bg-aqua-gradient" (click)="showDetails=!showDetails">
+                                    <i class="fa fa-chevron-circle-up" *ngIf="showDetails"></i>
+                                    <i class="fa fa-chevron-circle-down" *ngIf="!showDetails"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body" *ngIf="showDetails">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h3 class="box-title">{{user.description}}</h3>
+                                    <ngb-carousel *ngIf='user.mainProfiles?.length > 0'>
+                                        <ng-template ngbSlide *ngFor='let avatar of user.mainProfiles'>
+                                            <img [src]="avatar.img" alt="Unavailable" style="width: 450px; height: 420px;">
+                                        </ng-template>
+                                    </ngb-carousel>
+                                    <hr>
+                                    <div class="box-footer" *ngIf="technologies?.length > 0">
+                                        <h3 class="box-title">Tech & Tools I Use Most</h3>
+                                        <owl-carousel [options]="{items: 3, dots: true, navigation: true}" [items]="technologies" [carouselClasses]="['owl-theme', 'row', 'sliding']">
+                                            <div class="item" *ngFor="let image of technologies;">
+                                                <img src="{{image}}" alt="Unavailable!" />
+                                            </div>
+                                        </owl-carousel>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-md-7" style="border-left:1px solid #eee;">
+                                    <p class="text-center">
+                                        <strong>Know About Me</strong>
+                                    </p>
+                                    <div>
+                                        <div>
+                                            <h3 class="profile-username text-center">{{user.name}} {{user.lastName}}</h3>
+                                            <p class="text-muted text-center">{{user.jobTitle}}</p>
+                                            <hr />
+                                            <div>
+                                                <strong>
+                                                    <i class="fa fa-book margin-r-5"></i> Education</strong>
+                                                <p class="text-muted" *ngFor='let edu of education'>{{edu.specialty}}</p>
+                                                <hr>
+                                                <strong>
+                                                    <i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+                                                <p class="text-muted">{{user.location}}</p>
+                                                <hr>
+                                                <strong>
+                                                    <i class="fa fa-envelope margin-r-5"></i> Contact</strong>
+                                                <p class="text-muted">{{user.email}}</p>
+                                                <strong>
+                                                    <i class="fa fa-user-md margin-r-5" *ngIf="getTechnologies(experience)?.length > 0"></i> Specialist in</strong>
+                                                <p>
+                                                    <span class="badge badge-primary" *ngFor='let tech of getTechnologies(experience)'>{{tech}}</span>
+                                                </p>
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <strong>
+                                                            <i class="fa fa-language"></i> Languages</strong>
+                                                        <p class="text-muted" *ngFor='let lang of user.languages'>{{lang.name}}:
+                                                            <span class="badge badge-primary">{{lang.level}}</span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <strong>
+                                                            <i class="fa fa-language-md margin-r-5"></i> Social Networks</strong>
+                                                        <p>
+                                                            <a type="link" *ngIf="user.facebook" mdbWavesEffect href="{{user.facebook}}">
+                                                                <i class="sn fa fa-facebook"></i>
+                                                            </a>
+                                                            <!--Twitter-->
+                                                            <a type="link" *ngIf="user.twitter" mdbWavesEffect href="{{user.twitter}}">
+                                                                <i class="sn fa fa-twitter"></i>
+                                                            </a>
+                                                            <!--Google +-->
+                                                            <a type="link" *ngIf="user.linkedIn" mdbWavesEffect href="{{user.linkedIn}}">
+                                                                <i class="sn fa fa-linkedin"></i>
+                                                            </a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngFor="let skill of skills;">
+                                        <span class="progress-text">{{skill.title}}</span>
+                                        <ngb-progressbar [showValue]="true" type="{{skill.theme}}" [value]="[skill.percentage]"></ngb-progressbar>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <app-track *ngIf='videoId' [video]='videoId' [width]='750' [height]='550'></app-track>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
