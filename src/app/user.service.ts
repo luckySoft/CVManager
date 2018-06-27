@@ -17,17 +17,8 @@ const httpOptions = {
 })
 export class UserService {
 
-  currentUser: User;
   private url = 'api/users';
   constructor(private http: HttpClient) { }
-
-  setCurrentUser(user: User) {
-    this.currentUser = user;
-  }
-
-  getCurrentUser(): User {
-    return this.currentUser;
-  }
   
   createUser(form: RegisterForm): User {
     let user: User = new User();

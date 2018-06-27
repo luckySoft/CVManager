@@ -39,28 +39,31 @@
       </nav>
     </div>
     <div class="col-md-10">
-      <br/>
-      <h4 class="text-left text-primary">Technology Skills</h4>
-      <div class="row">
-        <div class="col-lg-3 col-xs-6" *ngFor="let skill of developmentStack">
-          <!-- small box -->
-          <!-- TODO box styles -->
-          <div class="small-box bg-{{skill.theme}}-gradient">
-            <div class="inner">
-              <h3>{{skill.percentage}}
-                <small class="text-black">%</small>
-              </h3>
-              <p class="text-bold">{{skill.software}}</p>
+      <div *ngIf="user$ | async as user; else loading">
+        <br/>
+        <h4 class="text-left text-primary">Technology Skills</h4>
+        <div class="row">
+          <div class="col-lg-3 col-xs-6" *ngFor="let skill of user.devSkills">
+            <!-- small box -->
+            <!-- TODO box styles -->
+            <div class="small-box bg-{{skill.theme}}-gradient">
+              <div class="inner">
+                <h3>{{skill.percentage}}
+                  <small class="text-black">%</small>
+                </h3>
+                <p class="text-bold">{{skill.software}}</p>
+              </div>
+              <div class="icon">
+                <i class="fa">
+                  <img src="assets/icons/{{skill.image}}.png" class="img-responsive" width="70" />
+                </i>
+              </div>
+              <ngb-progressbar [showValue]="true" type="{{skill.theme}}" [value]="[skill.percentage]"></ngb-progressbar>
             </div>
-            <div class="icon">
-              <i class="fa">
-                <img src="assets/icons/{{skill.image}}.png" class="img-responsive" width="70" />
-              </i>
-            </div>
-            <ngb-progressbar [showValue]="true" type="{{skill.theme}}" [value]="[skill.percentage]"></ngb-progressbar>
           </div>
         </div>
       </div>
     </div>
+    <ng-template #loading>Loading User Data...</ng-template>
   </div>
 </div>

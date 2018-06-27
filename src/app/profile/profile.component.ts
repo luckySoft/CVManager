@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'photo' });
   profileForm: FormGroup;
   submitted = false;
-
+  favTechnologies: Array<string>;
 
   constructor(private location: Location,
     private userService: UserService,
@@ -63,7 +63,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       description: ['', Validators.required],
       jobTitle: ['', Validators.required],
       location: ['', Validators.required],
-      videoId: [],
+      videoId: [''],
       password: ['', Validators.compose([Validators.required, Validators.minLength(8)])],
       facebook: ['', Validators.required],
       twitter: ['', Validators.required],
@@ -98,6 +98,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     const socialSkillsFormArray = this.formBuilder.array(socialSkillsFGs);
     this.profileForm.setControl('socialSkills', socialSkillsFormArray);
     this.id = this.user.id;
+    this.favTechnologies = this.user.favTechnologies;
     this.avatars$ = of(this.user.mainProfiles);
   }
 
@@ -120,7 +121,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       specialty: ['', Validators.required],
       institution: ['', Validators.required],
       address: ['', Validators.required],
-      url: ['', Validators.pattern(new RegExp("https://www.youtube.com/watch?v=\\w+"))]
+      url: ['']
     });
   }
 
@@ -133,7 +134,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       job: ['', Validators.required],
       company: ['', Validators.required],
       address: ['', Validators.required],
-      url: ['', Validators.pattern(new RegExp("https://www.youtube.com/watch?v=\\w+"))],
+      url: [''],
       type: ['', Validators.required],
       responsibilities: this.formBuilder.array([]),
       technologies: this.formBuilder.array([]),
@@ -150,7 +151,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       specialty: [edu.specialty, Validators.required],
       institution: [edu.institution, Validators.required],
       address: [edu.address, Validators.required],
-      url: [edu.url, Validators.pattern(new RegExp("https://www.youtube.com/watch?v=\\w+"))]
+      url: [edu.url]
     });
   }
 
@@ -163,7 +164,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       job: [exp.job, Validators.required],
       company: [exp.company, Validators.required],
       address: [exp.address, Validators.required],
-      url: [exp.url, Validators.pattern(new RegExp("https://www.youtube.com/watch?v=\\w+"))],
+      url: [exp.url],
       type: [exp.type, Validators.required],
       responsibilities: this.formBuilder.array(exp.responsibilities),
       technologies: this.formBuilder.array(exp.technologies),
@@ -314,15 +315,15 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   checkUserTechnologies(tech: string): boolean {
-    return this.user.favTechnologies.includes(tech);
+    return this.favTechnologies.includes(tech);
   }
 
   changeFavouriteTechnologies(tech: string) {
     if (this.checkUserTechnologies(tech)) {
       let techIndex = this.user.favTechnologies.indexOf(tech);
-      this.user.favTechnologies.splice(techIndex, 1);
+      this.favTechnologies.splice(techIndex, 1);
     } else {
-      this.user.favTechnologies.push(tech);
+      this.favTechnologies.push(tech);
     }
   }
 
@@ -333,45 +334,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     if (this.profileForm.invalid) {
       return;
     }
-    this.user.videoId = this.user.videoId.split("=")[0];
-    let languages = this.profileForm.get("languages") as FormArray;
+    
     this.user = this.profileForm.getRawValue() as User;
-    // this.languages$.subscribe(langs => {
-    //   if (langs.length > 0) {
-    //     this.user.languages = langs;
-    //   } else {
-    //     this.user.languages = [];
-    //   }
-    // });
-    // this.education$.subscribe(education => {
-    //   if (education.length > 0) {
-    //     if (education[education.length - 1].period.to && education[education.length - 1].period.to.toString == Date.now().toString) {
-    //       education[education.length - 1].period.to = null;
-    //     }
-    //     this.user.education = education;
-    //   } else {
-    //     this.user.education = new Array();
-    //   }
-    // });
-    // this.experience$.subscribe(experience => {
-    //   if (experience.length > 0) {
-    //     if (experience[experience.length - 1].period.to && experience[experience.length - 1].period.to.toString == Date.now().toString) {
-    //       experience[experience.length - 1].period.to = null;
-    //     }
-    //     this.user.experience = experience;
-    //   } else {
-    //     this.user.experience = new Array();
-    //   }
-    // });
-    // this.skills$.subscribe(skills => {
-    //   skills.forEach(skill => skill.software = this.technologies
-    //     .find((t, i, techs) => t.getTechValue() === skill.image).getViewValue());
-    //   if (skills.length > 0) {
-    //     this.user.devSkills = skills;
-    //   } else {
-    //     this.user.devSkills = [];
-    //   }
-    // });
+    this.avatars$.subscribe(avatars => this.user.mainProfiles = avatars);
+    this.user.videoId = this.user.videoId.split("=")[0];
+    this.user.id = this.id;
+    this.user.favTechnologies = this.favTechnologies;
     this.userService.updateUser(this.user).subscribe();
     sessionStorage.setItem("currentUser", JSON.stringify(this.user));
     this.router.navigate(["/users/" + this.id + "/dashboard"])

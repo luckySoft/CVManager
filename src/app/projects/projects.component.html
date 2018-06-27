@@ -39,22 +39,25 @@
       </nav>
     </div>
     <div class="col-md-10">
-      <!-- Main content -->
-      <section class="content">
-        <div *ngFor='let exp of experience'>
-          <div *ngIf='exp.projectIds?.length > 0'>
-            <br/>
-            <h4 class="box-header">Projects at
-              <strong>{{exp.company}}</strong>
-            </h4>
-            <owl-carousel [options]="{items: 3, video: true, dots: true, navigation: true}" [carouselClasses]="['owl-theme', 'row', 'sliding']">
-              <div class="item-video" *ngFor="let videoId of exp.projectIds">
-                <app-track [start]="false" [video]="videoId" [width]='300' [height]='200'></app-track>
-              </div>
-            </owl-carousel>
+      <div *ngIf="user$ | async as user; else loading">
+        <!-- Main content -->
+        <section class="content">
+          <div *ngFor='let exp of user.experience'>
+            <div *ngIf='exp.projectIds?.length > 0'>
+              <br/>
+              <h4 class="box-header">Projects at
+                <strong>{{exp.company}}</strong>
+              </h4>
+              <owl-carousel [options]="{items: 3, video: true, dots: true, navigation: true}" [carouselClasses]="['owl-theme', 'row', 'sliding']">
+                <div class="item-video" *ngFor="let videoId of exp.projectIds">
+                  <app-track [start]="false" [video]="videoId" [width]='300' [height]='200'></app-track>
+                </div>
+              </owl-carousel>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
+      <ng-template #loading>Loading User Data...</ng-template>
     </div>
   </div>
 </div>

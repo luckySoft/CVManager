@@ -40,36 +40,39 @@
     </div>
     <div class="col-md-10">
       <!-- Main content -->
-      <section class="content">
-        <!-- row -->
-        <!-- The time line -->
-        <div class="timeline" *ngFor='let edu of education'>
-          <div class="time-label">
-            <span class="bg-red-gradient" *ngIf='edu.period.to'>{{edu.period.from | date: 'yyyy'}}-{{edu.period.to | date: 'yyyy'}}</span>
-            <span class="bg-red-gradient" *ngIf='!edu.period.to'>{{edu.period.from | date: 'yyyy'}}-now</span>
-          </div>
-          <div>
-            <i class="fa fa-graduation-cap bg-blue-gradient text-white"></i>
-            <div class="timeline-item">
-              <h4 class="timeline-header">
-                <a href="{{edu.url}}"> {{edu.specialty}}</a>
-              </h4>
-              <div class="timeline-body">
-                <div class="callout callout-info col-md-10 col-sm-8 col-xs-12">
-                  <h3 class="text-black">{{edu.institution}}</h3>
-                  <h5>{{edu.address}}</h5>
+      <div *ngIf="user$ | async as user; else loading">
+        <section class="content">
+          <!-- row -->
+          <!-- The time line -->
+          <div class="timeline" *ngFor='let edu of user.education'>
+            <div class="time-label">
+              <span class="bg-red-gradient" *ngIf='edu.period.to'>{{edu.period.from | date: 'yyyy'}}-{{edu.period.to | date: 'yyyy'}}</span>
+              <span class="bg-red-gradient" *ngIf='!edu.period.to'>{{edu.period.from | date: 'yyyy'}}-now</span>
+            </div>
+            <div>
+              <i class="fa fa-graduation-cap bg-blue-gradient text-white"></i>
+              <div class="timeline-item">
+                <h4 class="timeline-header">
+                  <a href="{{edu.url}}"> {{edu.specialty}}</a>
+                </h4>
+                <div class="timeline-body">
+                  <div class="callout callout-info col-md-10 col-sm-8 col-xs-12">
+                    <h3 class="text-black">{{edu.institution}}</h3>
+                    <h5>{{edu.address}}</h5>
+                  </div>
+                </div>
+                <div class="timeline-footer">
+                  <p></p>
                 </div>
               </div>
-              <div class="timeline-footer">
-                <p></p>
-              </div>
+            </div>
+            <div>
+              <i class="fa fa-clock-o bg-gray"></i>
             </div>
           </div>
-          <div>
-            <i class="fa fa-clock-o bg-gray"></i>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
+      <ng-template #loading>Loading User Data...</ng-template>
     </div>
   </div>
 </div>

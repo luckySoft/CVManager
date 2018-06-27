@@ -4,6 +4,9 @@ import { MENU_ITEMS } from './../models/menu-items';
 import { HttpClient } from 'selenium-webdriver/http';
 import { users } from 'src/app/models/mock-users';
 import { User } from '../models/user';
+import { UserService } from '../user.service';
+import { Observable } from 'rxjs';
+import { delay, share, tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-skill',
@@ -17,13 +20,17 @@ export class SkillComponent implements OnInit {
   private developmentStack;
   private designStack;
   private otherStack;
-  private user: User;
+  private user$: Observable<User>;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private userService: UserService) { }
 
   ngOnInit() {
     this.id = +this.route.snapshot.paramMap.get('id');
-    this.user = users.filter(user => user.id === this.id).pop();
-    this.developmentStack = this.user.devSkills;
+
+    this.user$ = this.userService.getUser(this.id).pipe(
+      map(user => user[0]),
+      share(),
+      tap(user => console.log(user))
+    );
   }
 }

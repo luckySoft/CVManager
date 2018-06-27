@@ -178,19 +178,22 @@
                 <label class="col-lg-3 control-label">Social Networks:</label>
                 <div class="col-lg-8">
                   <label class="control-label">Facebook:</label>
-                  <input class="form-control" type="text" formControlName="facebook" [ngClass]="{ 'is-invalid': submitted && f.facebook.errors }">
+                  <input class="form-control" type="text" formControlName="facebook">
                   <p></p>
                   <label class="control-label">Twitter:</label>
-                  <input class="form-control" type="text" formControlName="twitter" [ngClass]="{ 'is-invalid': submitted && f.twitter.errors }">
+                  <input class="form-control" type="text" formControlName="twitter">
                   <p></p>
                   <label class="control-label">LinkedIn:</label>
-                  <input class="form-control" type="text" formControlName="linkedIn" [ngClass]="{ 'is-invalid': submitted && f.linkedIn.errors }">
+                  <input class="form-control" type="text" formControlName="linkedIn">
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-lg-3 control-label">My video:</label>
                 <div class="col-lg-8">
-                  <input class="form-control" type="text" formControlName="videoId" value="https://www.youtube.com/watch?v={{user.videoId}}">
+                  <input class="form-control" type="text" formControlName="videoId" value="https://www.youtube.com/watch?v={{user.videoId}}" [ngClass]="{ 'is-invalid': submitted && f.videoId.errors }">
+                  <div *ngIf="submitted && f.videoId.errors" class="invalid-feedback">
+                    <div *ngIf="f.videoId.errors.required">Field is required</div>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -205,7 +208,7 @@
                           </div>
                           <div class="col-md-4">
                             <mat-slider class="example-margin" [invert]="invert" [max]="100" [min]="0" [step]="1" [thumbLabel]="true" [tickInterval]="tickInterval"
-                              formControlName="percentage" [vertical]="vertical" [ngClass]="{ 'is-invalid': submitted && f.socialSkills.controls[i].controls.percentage.errors }">
+                              formControlName="percentage" [vertical]="vertical">
                             </mat-slider>
                           </div>
                           <div class="col-md-4">
@@ -215,6 +218,11 @@
                                   {{theme.themeViewValue}}
                                 </mat-option>
                               </mat-select>
+                              <mat-error>
+                                <div *ngIf="submitted && f.socialSkills.controls[i].controls.theme.errors" class="invalid-feedback">
+                                  <div *ngIf="f.socialSkills.controls[i].controls.theme.errors.required">Field is required</div>
+                                </div>
+                              </mat-error>
                             </mat-form-field>
                           </div>
                         </div>
@@ -258,10 +266,15 @@
                           <div class="col-md-3">
                             <mat-form-field>
                               <mat-select placeholder="Software" formControlName="image" aria-required="true">
-                                <mat-option *ngFor="let tech of technologies" [value]="tech.techValue">
+                                <mat-option *ngFor="let tech of technologies" [value]="tech.techValue" [ngClass]="{ 'is-invalid': submitted && profileForm.get('devSkills').controls[i].controls.image.errors }">
                                   {{tech.viewValue}}
                                 </mat-option>
                               </mat-select>
+                              <mat-error>
+                                <div *ngIf="submitted && f.devSkills.controls[i].controls.image.errors" class="invalid-feedback">
+                                  <div *ngIf="f.devSkills.controls[i].controls.image.errors.required">Field is required</div>
+                                </div>
+                              </mat-error>
                             </mat-form-field>
                           </div>
                           <div class="col-md-3">
@@ -276,6 +289,11 @@
                                   {{theme.themeViewValue}}
                                 </mat-option>
                               </mat-select>
+                              <mat-error>
+                                <div *ngIf="submitted && f.devSkills.controls[i].controls.theme.errors" class="invalid-feedback">
+                                  <div *ngIf="f.devSkills.controls[i].controls.theme.errors.required">Field is required</div>
+                                </div>
+                              </mat-error>
                             </mat-form-field>
                           </div>
                           <div class="col-md-3">
@@ -316,6 +334,11 @@
                                   <input matInput [matDatepicker]="picker" placeholder="From" formControlName="from" [required]="true" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.period.controls.from.errors }">
                                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                   <mat-datepicker #picker></mat-datepicker>
+                                  <mat-error>
+                                    <div *ngIf="submitted && f.education.controls[i].controls.period.controls.from.errors" class="invalid-feedback">
+                                      <div *ngIf="f.education.controls[i].controls.period.controls.from.errors.required">Field is required</div>
+                                    </div>
+                                  </mat-error>
                                 </mat-form-field>
                                 <p></p>
                               </div>
@@ -332,18 +355,27 @@
                           <label class="col-lg-3 control-label">Specialty:</label>
                           <div class="col-lg-8">
                             <input class="form-control" type="text" formControlName="specialty" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.specialty.errors }">
+                            <div *ngIf="submitted && f.education.controls[i].controls.specialty.errors" class="invalid-feedback">
+                              <div *ngIf="f.education.controls[i].controls.specialty.error.required">Field is required</div>
+                            </div>
                           </div>
                           <label class="col-lg-3 control-label">Institution:</label>
                           <div class="col-lg-8">
                             <input class="form-control" type="text" formControlName="institution" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.institution.errors }">
+                            <div *ngIf="submitted && f.education.controls[i].controls.institution.errors" class="invalid-feedback">
+                              <div *ngIf="f.education.controls[i].controls.institution.error.required">Field is required</div>
+                            </div>
                           </div>
                           <label class="col-lg-3 control-label">Address:</label>
                           <div class="col-lg-8">
                             <input class="form-control" type="text" formControlName="address" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.address.errors }">
+                            <div *ngIf="submitted && f.education.controls[i].controls.address.errors" class="invalid-feedback">
+                              <div *ngIf="f.education.controls[i].controls.address.error.required">Field is required</div>
+                            </div>
                           </div>
                           <label class="col-lg-3 control-label">Url:</label>
                           <div class="col-lg-8">
-                            <input class="form-control" type="text" formControlName="url" [ngClass]="{ 'is-invalid': submitted && f.education.controls[i].controls.url.errors }">
+                            <input class="form-control" type="text" formControlName="url">
                           </div>
                         </div>
                         <div class="col-md-2">
@@ -381,16 +413,21 @@
                               <div class="form-group">
                                 <label class="col-lg-3 control-label">From:</label>
                                 <mat-form-field>
-                                  <input matInput [matDatepicker]="picker" placeholder="From" formControlName="from" [required]="true" [ngClass]="{ 'is-invalid': submitted && f.experience.controls[i].controls.period.controls.from.errors }">
+                                  <input matInput [matDatepicker]="picker" placeholder="From" formControlName="from" [required]="true" [ngClass]="{ 'is-invalid': submitted && profileForm.controls.experience.controls[i].controls.period.controls.from.errors }">
                                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                   <mat-datepicker #picker></mat-datepicker>
+                                  <mat-error>
+                                    <div *ngIf="submitted && profileForm.controls.experience.controls[i].controls.period.controls.from.errors" class="invalid-feedback">
+                                      <div *ngIf="profileForm.controls.experience.controls[i].controls.period.controls.from.errors.required">Field is required</div>
+                                    </div>
+                                  </mat-error>
                                 </mat-form-field>
                                 <p></p>
                               </div>
                               <div class="form-group">
                                 <label class="col-lg-3 control-label">To:</label>
                                 <mat-form-field>
-                                  <input matInput [matDatepicker]="picker1" placeholder="To" formControlName="to" [ngClass]="{ 'is-invalid': submitted && f.experience.controls[i].controls.period.controls.to.errors }">
+                                  <input matInput [matDatepicker]="picker1" placeholder="To" formControlName="to">
                                   <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                   <mat-datepicker #picker1></mat-datepicker>
                                 </mat-form-field>
@@ -399,28 +436,40 @@
                           </div>
                           <label class="col-lg-3 control-label">Job:</label>
                           <div class="col-lg-8">
-                            <input class="form-control" type="text" formControlName="job" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.job.errors }">
+                            <input class="form-control" type="text" formControlName="job" [ngClass]="{ 'is-invalid': submitted && f.experience.controls[i].controls.job.errors }">
+                            
                           </div>
                           <label class="col-lg-3 control-label">Company:</label>
                           <div class="col-lg-8">
-                            <input class="form-control" type="text" formControlName="company" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.company.errors }">
+                            <input class="form-control" type="text" formControlName="company" [ngClass]="{ 'is-invalid': submitted && f.experience.controls[i].controls.company.errors }">
+                            <div *ngIf="submitted && f.experience.controls[i].controls.company.errors" class="invalid-feedback">
+                              <div *ngIf="f.experience.controls[i].controls.company.errors.required">Field is required</div>
+                            </div>
                           </div>
                           <label class="col-lg-3 control-label">Address:</label>
                           <div class="col-lg-8">
-                            <input class="form-control" type="text" formControlName="address" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.address.errors }">
+                            <input class="form-control" type="text" formControlName="address" [ngClass]="{ 'is-invalid': submitted && f.experience.controls[i].controls.address.errors }">
+                            <div *ngIf="submitted && f.experience.controls[i].controls.address.errors" class="invalid-feedback">
+                              <div *ngIf="f.experience.controls[i].controls.address.errors.required">Field is required</div>
+                            </div>
                           </div>
                           <label class="col-lg-3 control-label">Url:</label>
                           <div class="col-lg-8">
-                            <input class="form-control" type="text" formControlName="url" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.url.errors }">
+                            <input class="form-control" type="text" formControlName="url">
                           </div>
                           <label class="col-lg-3 control-label">Type:</label>
                           <div class="col-lg-8">
                             <mat-form-field>
-                              <mat-select placeholder="Job Type" formControlName="type" aria-required="true" [ngClass]="{ 'is-invalid': submitted && f.experience.controls.jobType.errors }">
+                              <mat-select placeholder="Job Type" formControlName="type" aria-required="true" [ngClass]="{ 'is-invalid': submitted && f.experience.controls[i].controls.type.errors }">
                                 <mat-option *ngFor="let type of jobTypes" [value]="type">
                                   {{type}}
                                 </mat-option>
                               </mat-select>
+                              <mat-error>
+                                <div *ngIf="submitted &&  f.experience.controls[i].controls.type.errors" class="invalid-feedback">
+                                  <div *ngIf="f.experience.controls[i].controls.type.errors.required">Field is required</div>
+                                </div>
+                              </mat-error>
                             </mat-form-field>
                           </div>
                           <hr>
@@ -441,7 +490,10 @@
                                   <div *ngFor="let responsibility of profileForm.controls.experience.controls[i].controls.responsibilities.controls; let j = index;" [formGroupName]="j">
                                     <div class="row">
                                       <div class="col-md-10">
-                                        <input class="form-control" type="text" [value]="responsibility.value" [ngClass]="{ 'is-invalid': submitted && profileForm.controls.experience.controls[i].controls.responsibilities.controls.responsibility.value.errors }">
+                                        <input class="form-control" type="text" [value]="responsibility.value" [ngClass]="{ 'is-invalid': submitted && profileForm.controls.experience.controls[i].controls.responsibilities.errors }">
+                                        <div *ngIf="submitted && profileForm.controls.experience.controls[i].controls.responsibilities.errors" class="invalid-feedback">
+                                          <div *ngIf="profileForm.controls.experience.controls[i].controls.responsibilities.errors.required">Field is required</div>
+                                        </div>
                                       </div>
                                       <div class="col-md-2">
                                         <button class="btn btn-primary waves-light" type="button" (click)="removeResponsibility(j,i)">
@@ -469,6 +521,9 @@
                                     <input placeholder="New technology..." [matChipInputFor]="chipList1" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                       [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addTechnology($event, i)" [ngClass]="{ 'is-invalid': submitted && profileForm.controls.experience.controls[i].controls.technologies.controls.errors }"
                                     />
+                                    <div *ngIf="submitted && profileForm.controls.experience.controls[i].controls.technologies.errors" class="invalid-feedback">
+                                      <div *ngIf="profileForm.controls.experience.controls[i].controls.technologies.errors.required">Field is required</div>
+                                    </div>
                                   </mat-chip-list>
                                 </mat-form-field>
                               </div>
@@ -487,9 +542,9 @@
                                   </mat-chip>
                                   <input matInput placeholder="New video on project..." [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                     [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addVideo($event, i)" />
-                                  <!-- <mat-error *ngIf="urlFormControl.hasError('pattern')">
+                                  <mat-error *ngIf="profileForm.controls.experience.controls[i].controls.projectIds.errors">
                                     Please enter a valid youtube link
-                                  </mat-error> -->
+                                  </mat-error>
                                 </mat-chip-list>
                               </mat-form-field>
                             </div>

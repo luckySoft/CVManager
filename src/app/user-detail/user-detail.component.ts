@@ -7,6 +7,9 @@ import { Experience } from './../models/experience';
 import { users } from './../models/mock-users';
 import { Education } from './../models/education';
 import { SocialSkill } from '../models/social-skill';
+import { UserService } from '../user.service';
+import { Observable } from 'rxjs';
+import { delay, share, tap, map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-user-detail',
@@ -24,21 +27,22 @@ export class UserDetailComponent implements OnInit {
     private menuItems = MENU_ITEMS;
     private showDetails = false;
     private user: User;
+    private user$: Observable<User>;
 
-    constructor(configCarousel: NgbCarouselConfig, private route: ActivatedRoute) {
+    constructor(configCarousel: NgbCarouselConfig, private route: ActivatedRoute, private userService: UserService) {
     }
 
     ngOnInit() {
         this.id = +this.route.snapshot.paramMap.get('id');
-        this.user = users.filter(user => user.id === this.id).pop();
-        this.videoId = this.user.videoId;
-        this.technologies = new Array<string>();
-        for (let tech of this.user.favTechnologies) {
-            this.technologies.push('assets/icons/' + tech + '.png');
-        }
-        this.education = this.user.education;
-        this.experience = this.user.experience;
-        this.skills = this.user.socialSkills;
+        this.user$ = this.userService.getUser(this.id).pipe(
+            map(user => user[0]),
+            share(),
+            tap(user => console.log(user))
+        );
+    }
+
+    getImage(tech: string): string {
+        return 'assets/icons/' + tech + '.png';
     }
 
     getTechnologies(experience: Array<Experience>): Array<string> {
@@ -47,7 +51,7 @@ export class UserDetailComponent implements OnInit {
             exp.technologies.forEach(tech => {
                 technologies.push(tech);
             });
-        });    
+        });
         return technologies;
     }
 }

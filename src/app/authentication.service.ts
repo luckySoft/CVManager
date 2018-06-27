@@ -23,6 +23,7 @@ export class AuthenticationService {
         // add && user.token
         if (user) {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
+          
           sessionStorage.setItem('currentUser', JSON.stringify(user));
         }
         return user;
