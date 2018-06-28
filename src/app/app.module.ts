@@ -74,7 +74,7 @@ import { CommonModule } from '@angular/common';
     OwlModule,
     MDBBootstrapModule.forRoot(),
     HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { dataEncapsulation: false })
+    // HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { dataEncapsulation: false })
   ],
   providers: [
     AuthGuard,

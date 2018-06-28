@@ -37,7 +37,6 @@ export class UserDetailComponent implements OnInit {
         this.user$ = this.userService.getUser(this.id).pipe(
             map(user => user[0]),
             share(),
-            tap(user => console.log(user))
         );
     }
 

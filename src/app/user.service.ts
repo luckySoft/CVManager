@@ -17,7 +17,7 @@ const httpOptions = {
 })
 export class UserService {
 
-  private url = 'api/users';
+  private url = 'http://localhost:8080/api/users';
   constructor(private http: HttpClient) { }
   
   createUser(form: RegisterForm): User {
