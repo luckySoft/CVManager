@@ -295,7 +295,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   addImage(image: any) {
     let avatar = new Avatar();
     avatar.main = false;
-    avatar.img = image;
+    avatar.img = 'assets/home/' + image.file.name;
     this.avatars$.subscribe(avatars => avatars.push(avatar));
   }
 
