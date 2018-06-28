@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   constructor(private location: Location,
     private userService: UserService,
-    private alert: AlertService,
+    private alertService: AlertService,
     private formBuilder: FormBuilder,
     private router: Router) {
 
@@ -332,6 +332,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
     // stop here if form is invalid
     if (this.profileForm.invalid) {
+      this.alertService.error("Something went wrong! Required fields or sections are missing!");
       return;
     }
     
