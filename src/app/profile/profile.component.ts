@@ -251,9 +251,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     if ((value || '').trim()) {
       let expArray = this.profileForm.get('experience') as FormArray;
       let technologies = expArray.controls[expIndex].get("technologies") as FormArray;
-      technologies.push(this.formBuilder.group({
-        tech: value
-      }))
+      technologies.push(this.formBuilder.array([value]))
     }
     // Reset the input value
     if (input) {
@@ -276,9 +274,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       let id = videoUrl[1];
       let expArray = this.profileForm.get('experience') as FormArray;
       let projectIds = expArray.controls[expIndex].get("projectIds") as FormArray;
-      projectIds.push(this.formBuilder.group({
-        projectId: id
-      }));
+      projectIds.push(this.formBuilder.array([id]));
     }
     // Reset the input value
     if (input) {
