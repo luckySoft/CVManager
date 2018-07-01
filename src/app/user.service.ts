@@ -10,7 +10,12 @@ import { ObserveOnMessage } from 'rxjs/internal/operators/observeOn';
 import { PromiseType } from 'protractor/built/plugins';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders(
+    { 
+      'Content-Type': 'application/json',
+      "Accept": "application/json"
+   })
+
 };
 @Injectable({
   providedIn: 'root'
@@ -58,7 +63,6 @@ export class UserService {
 
   login(email: string, password: string): Observable<any> {
     const url = `${this.url}/?email=${email}`;
-    let currentUser: Observable<User>;
     return this.getUsers().pipe(
       map(users => { 
         let user = users.filter(user => user.email == email && user.password == password)[0];
@@ -67,41 +71,15 @@ export class UserService {
     );
   }
 
-  /** GET user by id. Return `undefined` when id not found */
-  getUserNo404<Data>(id: number): Observable<User> {
-    const url = `${this.url}/?id=${id}`;
-    return this.http.get<User[]>(url)
-      .pipe(
-        map(users => users[0]), // returns a {0|1} element array
-        tap(h => {
-          const outcome = h ? `fetched` : `did not find`;
-          this.log(`${outcome} user id=${id}`);
-        }),
-        catchError(this.handleError<User>(`getUser id=${id}`))
-      );
-  }
-
-  addUser(user: User): Observable<User> {
+  addUser(user: User): Observable<any> {
     return this.http.post<User>(this.url, user, httpOptions).pipe(
-      tap((user: User) => this.log(`added user w/ id=${user.id}`)),
-      catchError(this.handleError<User>('addUser'))
+      map(user => user ? user : new Error("Not Created"))
     );
   }
 
   updateUser(user: User): Observable<any> {
-    return this.http.put(this.url, user, httpOptions).pipe(
-      tap(_ => this.log(`updated user id=${user.id}`)),
-      catchError(this.handleError<any>('updateUser'))
-    );
-  }
-
-  deleteUser(user: User | number): Observable<User> {
-    const id = typeof user === 'number' ? user : user.id;
-    const url = `${this.url}/${id}`;
-
-    return this.http.delete<User>(url, httpOptions).pipe(
-      tap(_ => this.log(`deleted user id=${id}`)),
-      catchError(this.handleError<User>('deleteUser'))
+    return this.http.put<User>(this.url, user, httpOptions).pipe(
+      map(user => user ? user : new Error("Not Updated"))
     );
   }
 
