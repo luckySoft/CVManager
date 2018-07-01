@@ -9,7 +9,7 @@ import { Language } from './../models/language';
 import { Location } from '@angular/common';
 import { Observable, of, Subscription } from 'rxjs';
 import { LANGUAGE_LEVELS } from './../models/mock-languages';
-import { FileUploader } from 'ng2-file-upload';
+import { FileUploader, FileItem } from 'ng2-file-upload';
 import { UserService } from './../user.service';
 import { Skill } from '../models/skill';
 import { THEMES } from '../models/themes';
@@ -288,7 +288,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     projectIds.removeAt(idIndex);
   }
 
-  addImage(image: any) {
+  addImage(image: FileItem) {
     let avatar = new Avatar();
     avatar.main = false;
     avatar.img = 'assets/home/' + image.file.name;
